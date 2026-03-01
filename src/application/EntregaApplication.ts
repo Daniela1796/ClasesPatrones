@@ -1,7 +1,7 @@
-import { Entrega } from "../domain/Entrega";
+import { Entrega } from "../domain/Entities/Entrega";
 import { EntregaPort } from "../domain/EntregaPort";
 import { LotePort } from "../domain/LotePort";
-import { LoteBase } from "../domain/Lote";
+import { LoteBase } from "../domain/Entities/Lote";
 import { RegistrationPort } from "../domain/RegistrationPort";
 
 export class userEntrega {
@@ -90,11 +90,7 @@ export class userEntrega {
     data.fechaRecogida = new Date(Date.now() + 48 * 60 * 60 * 1000); // 48 horas después
     data.estado = "Activa";
     const idEntrega = await this.port.createEntrega(data);
-    await this.lotePort.updateLoteEstado(
-      data.idLote,
-      "Procesado",
-      undefined,
-    );
+    await this.lotePort.updateLoteEstado(data.idLote, "Procesado", undefined);
     return idEntrega;
   }
 

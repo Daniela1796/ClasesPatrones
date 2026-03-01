@@ -15,7 +15,7 @@ export const authenticateToken = (
 
   try {
     const decoded = AuthApplication.verifyToken(token);
-    console.log("decoded:", decoded); // 👈 agrega esto
+    console.log("decoded:", decoded);
     (req as any).user = decoded;
     next();
   } catch (error) {

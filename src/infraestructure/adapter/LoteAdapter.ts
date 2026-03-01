@@ -1,7 +1,11 @@
 import { Repository } from "typeorm";
-import { LoteBase, LoteEmpresa, LoteVoluntario } from "../../domain/Lote";
+import {
+  LoteBase,
+  LoteEmpresa,
+  LoteVoluntario,
+} from "../../domain/Entities/Lote";
 import { LoteEntity } from "../entities/Lote";
-import { LotePort } from "../../domain/LotePort";
+import { LotePort } from "../../domain/Ports/LotePort";
 import { AppDataSource } from "../config/data-base";
 
 export class LoteAdapter implements LotePort {

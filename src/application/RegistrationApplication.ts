@@ -4,7 +4,7 @@ import {
   Registration_Empresa,
   Registration_Voluntario,
   Registration_Entidad,
-} from "../domain/Registration";
+} from "../domain/Entities/Registration";
 import { RegistrationPort } from "../domain/RegistrationPort";
 import { AuthApplication } from "./AuthApplication";
 

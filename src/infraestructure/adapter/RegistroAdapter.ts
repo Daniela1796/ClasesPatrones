@@ -4,12 +4,12 @@ import {
   Registration_Empresa,
   Registration_Voluntario,
   Registration_Entidad,
-} from "../../domain/Registration";
+} from "../../domain/Entities/Registration";
 import { User } from "../entities/User";
 import { Empresa } from "../entities/Empresa";
 import { Voluntario } from "../entities/Voluntario";
 import { Entidad } from "../entities/Entidad";
-import { RegistrationPort } from "../../domain/RegistrationPort";
+import { RegistrationPort } from "../../domain/Ports/RegistrationPort";
 import { AppDataSource } from "../config/data-base";
 
 //-------------------------------------------------------------------------
