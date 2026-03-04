@@ -4,4 +4,6 @@ import { EntregaEntity } from "../entities/Entrega";
 import { EntregaPort } from "../../domain/Ports/EntregaPort";
 import { AppDataSource } from "../config/data-base";
 
-export class EntregaAdapter {}
+export class EntregaAdapter {
+    
+}

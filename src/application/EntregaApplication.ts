@@ -1,8 +1,8 @@
 import { Entrega } from "../domain/Entities/Entrega";
-import { EntregaPort } from "../domain/EntregaPort";
-import { LotePort } from "../domain/LotePort";
+import { EntregaPort } from "../domain/Ports/EntregaPort";
+import { LotePort } from "../domain/Ports/LotePort";
 import { LoteBase } from "../domain/Entities/Lote";
-import { RegistrationPort } from "../domain/RegistrationPort";
+import { RegistrationPort } from "../domain/Ports/RegistrationPort";
 
 export class userEntrega {
   private port: EntregaPort;
