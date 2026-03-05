@@ -1,9 +1,8 @@
 //Servicios del usuario: inciar sesión
 import bcrypt from "bcryptjs";
 import { User } from "../domain/Entities/User";
-import { UserPort } from "../domain/UserPort";
+import { UserPort } from "../domain/Ports/UserPort";
 import { AuthApplication } from "./AuthApplication";
-import { Request, Response } from "express";
 
 export class UserApplication {
   private port: UserPort;
@@ -19,7 +18,6 @@ export class UserApplication {
       throw new Error("Credenciales invalidas");
     }
 
-    //Verificar el estado del usuario
     if (!existUser.status) {
       throw new Error("Usuario inactivo, contacte al administrador");
     }

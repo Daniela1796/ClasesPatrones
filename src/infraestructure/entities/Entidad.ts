@@ -10,7 +10,7 @@ import { User } from "./User";
 @Entity("entidad")
 export class Entidad {
   @PrimaryGeneratedColumn()
-  id_user!: number;
+  id_entidad!: number;
 
   @Column({ type: "varchar", length: 255, unique: true })
   nit!: string;

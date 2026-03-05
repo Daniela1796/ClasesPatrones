@@ -1,6 +1,7 @@
 import { UserDonaciones } from "../../application/LoteApplication";
 import { Request, Response } from "express";
-import { loadLoteRegistro } from "../util/lote-validation";
+import { loadLoteEmpresa} from "../util/lote-validation";
+import { loadLoteVoluntario } from "../util/lote-validation";
 import { loadUpdateLoteRegistro } from "../util/lote-update-validation";
 import { error } from "node:console";
 
@@ -11,25 +12,24 @@ export class loteController {
     this.app = application;
   }
 
-  async createLote(req: Request, res: Response): Promise<string | Response> {
+  async createLoteEmpresa(req: Request, res: Response): Promise<Response> {
     try {
-      const rol = (req as any).user.rol;
-      const dataLoad = loadUpdateLoteRegistro(req.body, rol);
-      const loteFull = {
-        ...dataLoad,
-        idDonante: (req as any).user.id,
-        tipoDonante: rol,
-        estado: "En proceso",
-        fechaDeRecibido: null,
-        idEntrega: null,
-      };
+      const data = loadLoteEmpresa(req.body); // Joi para empresa
+      const id = await this.app.createLoteEmpresa(data);
+      return res.status(200).json({ message: "Lote creado", id });
+    } catch (error) {
+      if (error instanceof Error) {
+        return res.status(400).json({ error: error.message });
+      }
+      return res.status(500).json({ error: "Error interno del servidor" });
+    }
+  }
 
-      const id = await this.app.createLote(loteFull);
-
-      return res.status(201).json({
-        message: "Lote creado con éxito",
-        id,
-      });
+  async createLoteVoluntario(req: Request, res: Response): Promise<Response> {
+    try {
+      const data = loadLoteVoluntario(req.body); // Joi para voluntario
+      const id = await this.app.createLoteVoluntario(data);
+      return res.status(200).json({ message: "Lote creado", id });
     } catch (error) {
       if (error instanceof Error) {
         return res.status(400).json({ error: error.message });
@@ -65,7 +65,7 @@ export class loteController {
       if (Number.isNaN(id)) {
         return res.status(400).json({ error: "ID Inválido" });
       }
-      const rol = (req as any).user.rol;
+      const rol = req.body.UserDonaciones.rol;
       const data = req.body;
       const dataLoad = loadUpdateLoteRegistro(data, rol);
       const updated = await this.app.updateLote(id, dataLoad, rol);

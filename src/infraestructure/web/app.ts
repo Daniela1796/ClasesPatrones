@@ -1,4 +1,4 @@
-import express, { type Request, type Response } from "express";
+import express from "express";
 import registroRoutes from "../routes/RegistrationRoutes";
 import userRoutes from "../routes/UserRoutes";
 import loteRoutes from "../routes/LoteRoutes";

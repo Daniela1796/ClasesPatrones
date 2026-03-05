@@ -1,4 +1,4 @@
-import { LoteBase, LoteEmpresa, LoteVoluntario } from "./Lote";
+import { LoteBase, LoteEmpresa, LoteVoluntario } from "../Entities/Lote";
 
 export interface LotePort {
   //Empresas

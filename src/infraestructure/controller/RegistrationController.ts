@@ -127,17 +127,25 @@ export class registroController {
       if (Number.isNaN(id)) {
         return res.status(400).json({ error: "ID inválido" });
       }
-
+  
       const deleteRegistro = await this.app.deleteUser(id);
-
+  
+      if (!deleteRegistro) {
+        return res.status(404).json({
+          message: "Usuario no encontrado",
+          status: "Activo"     
+        });
+      }
+  
       return res.status(200).json({
-        message: "Perfil de registro eliminado con éxito",
-        status: deleteRegistro ? "Inactivo" : "Activo",
+        message: "Perfil eliminado con éxito",
+        status: "Inactivo"     
       });
+  
     } catch (error) {
       if (error instanceof Error) {
         return res.status(500).json({
-          error: "Error interno del servidor al eliminar el perfil de registro",
+          error: "Error interno del servidor",
           details: error.message,
         });
       }

@@ -55,11 +55,7 @@ export class LoteAdapter implements LotePort {
     const loteEntity = this.toEntityLote(data);
     loteEntity.cantidadDeCajas = data.cantidadDeCajas;
     loteEntity.precioPorCaja = data.precioPorCaja;
-    loteEntity.costoTotal = data.costoTotal;
-    const costoCalculado =
-      (data as LoteEmpresa).cantidadDeCajas *
-      (data as LoteEmpresa).precioPorCaja;
-    (data as any).costoTotal = costoCalculado;
+    loteEntity.costoTotal = data.cantidadDeCajas * data.precioPorCaja;
     return loteEntity;
   }
 
@@ -183,8 +179,6 @@ export class LoteAdapter implements LotePort {
 
       if (!existingLote) return false;
 
-      Object.assign(existingLote, { estado: false });
-
       await this.loteRepository.update(id, { estado: "Inactivo" });
       return true;
     } catch (error) {
@@ -250,6 +244,12 @@ export class LoteAdapter implements LotePort {
     fechaRecibido?: Date,
   ): Promise<boolean> {
     try {
+      const existingLote = await this.loteRepository.findOne({
+        where: { idLote: id },
+      });
+
+      if (!existingLote) return false;
+      
       const loteUpdate: Partial<LoteEntity> = { estado };
 
       if (fechaRecibido) {

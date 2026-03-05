@@ -1,7 +1,7 @@
 import { LoteBase, LoteEmpresa, LoteVoluntario } from "../domain/Entities/Lote";
-import { LotePort } from "../domain/LotePort";
+import { LotePort } from "../domain/Ports/LotePort";
 
-type LoteData = Omit<LoteEmpresa, "idLote"> | Omit<LoteVoluntario, "idLote">;
+type LoteData = Omit<LoteVoluntario, "idLote">;
 
 export class UserDonaciones {
   private port: LotePort;
@@ -11,24 +11,35 @@ export class UserDonaciones {
   }
 
   //Verificar el rol para crear lote
-  async createLote(data: Omit<LoteData, "idLote">): Promise<number> {
-    if (data.tipoDonante === "empresa") {
-      (data as any).estado = "En proceso";
-      (data as any).fechaRecibido = new Date();
-      (data as any).costoTotal =
-        (data as LoteEmpresa).cantidadDeCajas *
-        (data as LoteEmpresa).precioPorCaja;
+  async createLoteEmpresa(
+    data: Omit<
+      LoteEmpresa,
+      "idLote" | "estado" | "costoTotal" | "fechaDeRecibido" | "idEntrega"
+    >,
+  ): Promise<number> {
+    const loteCompleto: Omit<LoteEmpresa, "idLote"> = {
+      ...data,
+      estado: "En proceso",
+      costoTotal: data.cantidadDeCajas * data.precioPorCaja,
+      fechaDeRecibido: null,
+      idEntrega: null,
+    };
+    return await this.port.createLoteEmpresa(loteCompleto);
+  }
 
-      return await this.port.createLoteEmpresa(data as LoteEmpresa);
-    }
-
-    if (data.tipoDonante === "voluntario") {
-      (data as any).estado = "En proceso";
-      (data as LoteVoluntario).cantidadPorUnidad;
-      return await this.port.createLoteVoluntarios(data as LoteVoluntario);
-    }
-
-    throw new Error("Perfil inválido");
+  async createLoteVoluntario(
+    data: Omit<
+      LoteVoluntario,
+      "idLote" | "estado" | "fechaDeRecibido" | "idEntrega"
+    >,
+  ): Promise<number> {
+    const loteCompleto: Omit<LoteVoluntario, "idLote"> = {
+      ...data,
+      estado: "En proceso",
+      fechaDeRecibido: null,
+      idEntrega: null,
+    };
+    return await this.port.createLoteVoluntarios(loteCompleto);
   }
 
   async getLotesByDonante(idDonante: number): Promise<LoteBase[]> {

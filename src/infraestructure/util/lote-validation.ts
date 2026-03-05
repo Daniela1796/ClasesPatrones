@@ -1,15 +1,16 @@
 import Joi from "joi";
 
 export type ReturnLoteData = {
+  idDonante: number;
+  tipoDonante: string;
   alimento: string;
   clasificacion: string;
   fechaVencimiento: Date;
 };
 
 export type ReturnLoteEmpresaData = ReturnLoteData & {
-  cantidadCajas: number;
+  cantidadDeCajas: number;
   precioPorCaja: number;
-  costoTotal: number;
 };
 
 export type ReturnLoteVoluntarioData = ReturnLoteData & {
@@ -26,9 +27,6 @@ type ValidationLoteVoluntarioData = {
   value: ReturnLoteVoluntarioData;
 };
 
-export type ReturnFormatoLote =
-  | ReturnLoteEmpresaData
-  | ReturnLoteVoluntarioData;
 
 function validateLoteEmpresaData(data: any): ValidationLoteEmpresaData {
   const schema = Joi.object({
@@ -101,7 +99,7 @@ function validateLoteVoluntarioData(data: any): ValidationLoteVoluntarioData {
     }),
 
     fechaVencimiento: Joi.date()
-      .min(new Date(Date.now() + 48 * 60 * 60 * 1000)) // 👈 ahora + 48 horas
+      .min(new Date(Date.now() + 48 * 60 * 60 * 1000)) 
       .required()
       .messages({
         "date.min":
@@ -114,17 +112,15 @@ function validateLoteVoluntarioData(data: any): ValidationLoteVoluntarioData {
   return { error, value: value as ReturnLoteVoluntarioData };
 }
 
-export const loadLoteRegistro = (data: any, rol: string): ReturnFormatoLote => {
-  if (rol === "empresa") {
-    const { error, value } = validateLoteEmpresaData(data);
-    if (error) throw new Error(error.details.map((d) => d.message).join(", "));
-    return value;
-  }
+export const loadLoteEmpresa = (data: any): ReturnLoteEmpresaData => {
+  const { error, value } = validateLoteEmpresaData(data);
+  if (error) throw new Error(error.details.map((d) => d.message).join(", "));
+  return value;
+};
 
-  if (rol === "voluntario") {
-    const { error, value } = validateLoteVoluntarioData(data);
-    if (error) throw new Error(error.details.map((d) => d.message).join(", "));
-    return value;
-  }
-  throw new Error("Tipo de entidad inválido, no fue posible registrar el lote");
+
+export const loadLoteVoluntario = (data: any): ReturnLoteVoluntarioData => {
+  const { error, value } = validateLoteVoluntarioData(data);
+  if (error) throw new Error(error.details.map((d) => d.message).join(", "));
+  return value;
 };

@@ -10,7 +10,7 @@ import { User } from "./User";
 @Entity("voluntario")
 export class Voluntario {
   @PrimaryGeneratedColumn()
-  id!: number;
+  id_voluntario!: number;
 
   @OneToOne(() => User)
   @JoinColumn({ name: "user_id" })

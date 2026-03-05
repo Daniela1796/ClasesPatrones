@@ -12,8 +12,12 @@ const loteApp = new UserDonaciones(loteAdaptador);
 const loteControlador = new loteController(loteApp);
 
 //Crear registro
-router.post("/lote", authenticateToken, async (req, res) => {
-  await loteControlador.createLote(req, res);
+router.post("/createLoteEmpresa", authenticateToken, async (req, res) => {
+  await loteControlador.createLoteEmpresa(req, res);
+});
+
+router.post("/createLoteVoluntario", authenticateToken, async (req, res) => {
+  await loteControlador.createLoteVoluntario(req, res);
 });
 
 //Visualizar registros
