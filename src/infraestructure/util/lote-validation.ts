@@ -93,11 +93,6 @@ function validateLoteVoluntarioData(data: any): ValidationLoteVoluntarioData {
       "any.required": "La cantidad de unidades de alimento es requerida",
     }),
 
-    precioPorCaja: Joi.number().min(1).required().messages({
-      "number.min": "El precio mínimo es 1",
-      "any.required": "El precio por caja es requerido",
-    }),
-
     fechaVencimiento: Joi.date()
       .min(new Date(Date.now() + 48 * 60 * 60 * 1000)) 
       .required()

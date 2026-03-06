@@ -299,7 +299,6 @@ export class RegistroAdapter implements RegistrationPort {
 
       if (!existingVoluntario) return false;
 
-      // Paso 1: users
       const userUpdate = this.toEntityPartial(voluntario);
 
       if (Object.keys(userUpdate).length > 0) {
@@ -309,7 +308,6 @@ export class RegistroAdapter implements RegistrationPort {
         );
       }
 
-      // Paso 2: voluntario
       const voluntarioUpdate = this.toEntityPartialVoluntario(voluntario);
 
       if (Object.keys(voluntarioUpdate).length > 0) {
@@ -457,10 +455,20 @@ export class RegistroAdapter implements RegistrationPort {
 
     if (!user) return null;
 
-    //Actualizar solo los campos enviados
     return this.toDomain(user);
   }
 
+  async getRegistrationByLocalidad(
+    localidad_user: string,
+  ): Promise<MainRegistration | null> {
+    const user = await this.registroRepository.findOne({
+      where: { localidad: localidad_user },
+    });
+
+    if (!user) return null;
+
+    return this.toDomain(user);
+  }
   async getRegistrationByRol(rol_user: string): Promise<MainRegistration[]> {
     try {
       const users = await this.registroRepository.find({

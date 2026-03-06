@@ -21,7 +21,7 @@ router.post("/createLoteVoluntario", authenticateToken, async (req, res) => {
 });
 
 //Visualizar registros
-router.get("/verlotes/:id", authenticateToken, async (req, res) => {
+router.get("/verlotes", authenticateToken, async (req, res) => {
   await loteControlador.getLotesByDonante(req, res);
 });
 

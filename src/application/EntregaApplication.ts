@@ -22,60 +22,12 @@ export class userEntrega {
     this.userPort = userPort;
   }
 
-  async getLotesDisponibles(idSolicitante: number): Promise<LoteBase[]> {
-    const solicitante = await this.userPort.getRegistrationById(idSolicitante);
-    if (!solicitante) throw new Error("Solicitante no encontrado");
+  async getLotesDisponibles(localidad: string): Promise<LoteBase[]> {
+    const Lugarsolicitante =
+      await this.userPort.getRegistrationByLocalidad(localidad);
+    if (!Lugarsolicitante) throw new Error("Solicitante no encontrado");
 
-    const lotes = await this.lotePort.getLotesDisponibles();
-    const PRIORIDAD: Record<string, number> = {
-      A: 1,
-      B: 2,
-      C: 3,
-      D: 4,
-    };
-
-    // Paso 1: ordenar por clasificacion y fecha (criterios vitales)
-    const lotesOrdenados = lotes.sort((a, b) => {
-      if (PRIORIDAD[a.clasificacion] !== PRIORIDAD[b.clasificacion]) {
-        return (
-          (PRIORIDAD[a.clasificacion] ?? 99) -
-          (PRIORIDAD[b.clasificacion] ?? 99)
-        );
-      }
-      return (
-        new Date(a.fechaVencimiento).getTime() -
-        new Date(b.fechaVencimiento).getTime()
-      );
-    });
-
-    // Paso 2: dentro de cada grupo, priorizar misma localidad
-    // Para esto necesitamos la localidad del donante de cada lote
-    const lotesConLocalidad = await Promise.all(
-      lotesOrdenados.map(async (lote) => {
-        const donante = await this.userPort.getRegistrationById(lote.idDonante);
-        return { lote, localidadDonante: donante?.localidad };
-      }),
-    );
-
-    // Paso 3: reordenar priorizando misma localidad pero respetando clasificacion
-    return lotesConLocalidad
-      .sort((a, b) => {
-        // Si son de la misma clasificacion, priorizar localidad
-        if (a.lote.clasificacion === b.lote.clasificacion) {
-          if (
-            a.localidadDonante === solicitante.localidad &&
-            b.localidadDonante !== solicitante.localidad
-          )
-            return -1;
-          if (
-            b.localidadDonante === solicitante.localidad &&
-            a.localidadDonante !== solicitante.localidad
-          )
-            return 1;
-        }
-        return 0;
-      })
-      .map((item) => item.lote); // retorna solo los lotes sin la localidad
+    return this.lotePort.getLotesPriorizados(Lugarsolicitante.localidad);
   }
 
   async createEntrega(data: Omit<Entrega, "idEntrega">): Promise<number> {

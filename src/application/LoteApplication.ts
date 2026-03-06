@@ -21,7 +21,7 @@ export class UserDonaciones {
       ...data,
       estado: "En proceso",
       costoTotal: data.cantidadDeCajas * data.precioPorCaja,
-      fechaDeRecibido: null,
+      fechaDeRecibido: new Date(),
       idEntrega: null,
     };
     return await this.port.createLoteEmpresa(loteCompleto);
@@ -36,7 +36,7 @@ export class UserDonaciones {
     const loteCompleto: Omit<LoteVoluntario, "idLote"> = {
       ...data,
       estado: "En proceso",
-      fechaDeRecibido: null,
+      fechaDeRecibido: new Date(),
       idEntrega: null,
     };
     return await this.port.createLoteVoluntarios(loteCompleto);

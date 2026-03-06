@@ -28,8 +28,8 @@ export class UserAdapter implements UserPort {
     });
 
     if (!user) return null;
+    
 
-    //Actualizar solo los campos enviados
     return this.toDomain(user);
   }
 }

@@ -34,8 +34,9 @@ export class UserController {
       if (!user) {
         return res.status(404).json({ error: "User not found" });
       }
-
+      
       return res.status(200).json({
+        
         message: "Usuario obtenido con éxito",
         data: user,
       });

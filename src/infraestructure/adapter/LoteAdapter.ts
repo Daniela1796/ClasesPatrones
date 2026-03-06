@@ -218,6 +218,11 @@ export class LoteAdapter implements LotePort {
         where: { idDonante: id_Donante },
       });
 
+      console.log("buscando por idDonante:", donantes);
+      const lotes = await this.loteRepository.find({
+        where: { idDonante: id_Donante },
+      });
+      console.log("lotes encontrados:", lotes.length);
       return donantes.map(this.toDomainLote);
     } catch (error) {
       console.error("Error al obtener la lista de donantes", Error);
@@ -225,17 +230,30 @@ export class LoteAdapter implements LotePort {
     }
   }
 
-  async getLotesDisponibles(): Promise<LoteBase[]> {
-    try {
-      const disponibles = await this.loteRepository.find({
-        where: { estado: "En proceso" },
-      });
+  async getLotesPriorizados(localidad: string): Promise<LoteBase[]> {
+    const lotesProiorizados = await this.loteRepository
+      .createQueryBuilder("lote")
+      .leftJoin("lote.user", "user")
+      .where("lote.estado = :estado", { estado: "En proceso" })
+      .orderBy(
+        `      CASE lote.clasificacion
+      WHEN 'A' THEN 1
+      WHEN 'B' THEN 2
+      WHEN 'C' THEN 3
+      WHEN 'D' THEN 4
+      ELSE 5
+      END `,
+        "ASC",
+      )
+      .addOrderBy("lote.fechaVencimeinto", "ASC")
+      .addOrderBy(
+        `CASE WHEN user.localidad = :localidad THEN 0 ELSE 1 END`,
+        "ASC",
+      )
+      .setParameter("localidad", localidad)
+      .getMany();
 
-      return disponibles.map(this.toDomainLote);
-    } catch (error) {
-      console.error("Error al obtener listado", Error);
-      throw new Error("Error en la lista de lotes disponibles");
-    }
+    return lotesProiorizados.map((lote) => this.toDomainLote(lote));
   }
 
   async updateLoteEstado(
@@ -249,7 +267,7 @@ export class LoteAdapter implements LotePort {
       });
 
       if (!existingLote) return false;
-      
+
       const loteUpdate: Partial<LoteEntity> = { estado };
 
       if (fechaRecibido) {
