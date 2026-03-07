@@ -36,9 +36,9 @@ export class LoteAdapter implements LotePort {
     loteEntity.alimento = data.alimento;
     loteEntity.clasificacion = data.clasificacion;
     loteEntity.fechaVencimiento = data.fechaVencimiento;
-    loteEntity.fechaRecibido = data.fechaDeRecibido ?? null; // 👈 maneja undefined
+    loteEntity.fechaRecibido = data.fechaDeRecibido ?? null;
     loteEntity.estado = data.estado;
-    loteEntity.idEntrega = data.idEntrega ?? null; // 👈 maneja undefined
+    loteEntity.idEntrega = data.idEntrega ?? null;
     return loteEntity;
   }
 
@@ -194,7 +194,11 @@ export class LoteAdapter implements LotePort {
 
     if (!lote) return null;
 
-    return this.toDomainLote(lote);
+    return {
+      ...this.toDomainLote(lote),
+      cantidadDeCajas: lote.cantidadDeCajas,
+      cantidadPorUnidad: lote.cantidadPorUnidad
+    } as any
   }
 
   async getLotesByClasificacion(
@@ -245,7 +249,7 @@ export class LoteAdapter implements LotePort {
       END `,
         "ASC",
       )
-      .addOrderBy("lote.fechaVencimeinto", "ASC")
+      .addOrderBy("lote.fechaVencimiento", "ASC")
       .addOrderBy(
         `CASE WHEN user.localidad = :localidad THEN 0 ELSE 1 END`,
         "ASC",

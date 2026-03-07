@@ -4,7 +4,8 @@ export interface Entrega{
     idSolicitante: number;
     tipoSolicitante: string;
     estado: string;
-    fechaSolicitud?: Date;
-    fechaRecogida?:Date;
-    fechaConfirmacion?:Date;
+    cantidadSolicitada: number;
+    fechaSolicitud?: Date | null;
+    fechaRecogida?:Date | null;
+    fechaConfirmacion?:Date | null;
 }

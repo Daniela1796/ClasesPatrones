@@ -57,7 +57,7 @@ function validateLoteEmpresaData(data: any): ValidationLoteEmpresaData {
     }),
 
     fechaVencimiento: Joi.date()
-      .min(new Date(Date.now() + 48 * 60 * 60 * 1000)) // 👈 ahora + 48 horas
+      .min(new Date(Date.now() + 48 * 60 * 60 * 1000)) 
       .required()
       .messages({
         "date.min":

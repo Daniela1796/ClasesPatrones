@@ -2,6 +2,8 @@ import express from "express";
 import registroRoutes from "../routes/RegistrationRoutes";
 import userRoutes from "../routes/UserRoutes";
 import loteRoutes from "../routes/LoteRoutes";
+import entregaRoutes from "../routes/EntregaRoutes";
+
 class App {
   private app: express.Application;
 
@@ -18,7 +20,8 @@ class App {
   private routes(): void {
     this.app.use("/api", registroRoutes);
     this.app.use("/api", userRoutes);
-    this.app.use("/api",loteRoutes)
+    this.app.use("/api", loteRoutes);
+    this.app.use("/api/", entregaRoutes);
   }
 
   getApp() {

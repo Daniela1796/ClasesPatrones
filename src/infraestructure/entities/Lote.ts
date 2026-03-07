@@ -28,7 +28,7 @@ export class LoteEntity {
   cantidadDeCajas!: number ;
 
   @Column({ type: "int", nullable: true })
-  cantidadPorUnidad!: number ;
+  cantidadPorUnidad!: number;
 
   @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
   precioPorCaja!: number ;

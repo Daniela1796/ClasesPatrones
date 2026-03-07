@@ -2,7 +2,6 @@ import { UserDonaciones } from "../../application/LoteApplication";
 import { LoteAdapter } from "../adapter/LoteAdapter";
 import { loteController } from "../controller/LoteController";
 import { Router } from "express";
-import { Request, Response, NextFunction } from "express";
 import { authenticateToken } from "../web/authMiddleware";
 
 const router = Router();

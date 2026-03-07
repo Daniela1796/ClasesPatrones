@@ -17,6 +17,6 @@ export interface LotePort {
   getLoteById(idLote: number): Promise<LoteBase | null>;
   getLotesByDonante(idDonante: number): Promise<LoteBase[]>;
   getLotesPriorizados(localidad: string): Promise<LoteBase[]>;
-  getLotesByClasificacion(clasificacion: string): Promise<LoteBase[]>; // para priorización
-  updateLoteEstado(id: number, estado: string, fecha?:Date): Promise<boolean>; //Actualizar datos cuando la donación sea exitosa
+  getLotesByClasificacion(clasificacion: string): Promise<LoteBase[]>;
+  updateLoteEstado(id: number, estado: string, fecha?:Date): Promise<boolean>; 
 }

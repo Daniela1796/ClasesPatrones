@@ -25,8 +25,11 @@ export class EntregaEntity {
   @Column({ type: "varchar", length: 50, default: "Activa" })
   estado!: string;
 
+  @Column({ type: "int" })
+  cantidadSolicitada!: number;
+
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-  fechaSolicitud!: Date;
+  fechaSolicitud!: Date | null;
 
   @Column({ type: "timestamp", nullable: true })
   fechaRecogida!: Date | null;
