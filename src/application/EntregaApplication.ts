@@ -41,7 +41,6 @@ export class userEntrega {
         ? loteCompleto.cantidadDeCajas
         : loteCompleto.cantidadPorUnidad;
 
-    console.log("Cantidad: ", cantidadDisponible);
     if (!cantidadDisponible) {
       throw new Error("No se pudo obtener la cantidad disponible");
     }

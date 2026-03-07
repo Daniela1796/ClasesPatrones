@@ -68,9 +68,6 @@ export class IncentivoAdapter implements IncentivoPort {
 
       const incentivoUpdate = this.toEntityPartialIncentivo(incentivo);
 
-      console.log("incentivoUpdate:", incentivoUpdate);
-      console.log("lotesID:", incentivoUpdate.lotesID); 
-
       if (Object.keys(incentivoUpdate).length > 0) {
         await this.incentivoRepository.update(id, incentivoUpdate);
       }
