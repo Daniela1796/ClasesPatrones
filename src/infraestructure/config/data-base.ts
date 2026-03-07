@@ -4,6 +4,7 @@ import { User } from "../entities/User";
 import { Empresa } from "../entities/Empresa";
 import { Voluntario } from "../entities/Voluntario";
 import { Entidad } from "../entities/Entidad";
+import { EntregaEntity } from "../entities/Entrega";
 import envs from "../config/enviroment-vars";
 import { LoteEntity } from "../entities/Lote";
 
@@ -18,7 +19,7 @@ export const AppDataSource = new DataSource({
   database: String(envs.DB_NAME),
   synchronize: true,
   logging: false,
-  entities: [User, Empresa, Voluntario, Entidad, LoteEntity],
+  entities: [User, Empresa, Voluntario, Entidad, LoteEntity, EntregaEntity],
   ssl: {
     rejectUnauthorized: true,
   },

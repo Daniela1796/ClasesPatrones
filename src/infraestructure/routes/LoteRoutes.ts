@@ -2,7 +2,6 @@ import { UserDonaciones } from "../../application/LoteApplication";
 import { LoteAdapter } from "../adapter/LoteAdapter";
 import { loteController } from "../controller/LoteController";
 import { Router } from "express";
-import { Request, Response, NextFunction } from "express";
 import { authenticateToken } from "../web/authMiddleware";
 
 const router = Router();
@@ -12,12 +11,16 @@ const loteApp = new UserDonaciones(loteAdaptador);
 const loteControlador = new loteController(loteApp);
 
 //Crear registro
-router.post("/lote", authenticateToken, async (req, res) => {
-  await loteControlador.createLote(req, res);
+router.post("/createLoteEmpresa", authenticateToken, async (req, res) => {
+  await loteControlador.createLoteEmpresa(req, res);
+});
+
+router.post("/createLoteVoluntario", authenticateToken, async (req, res) => {
+  await loteControlador.createLoteVoluntario(req, res);
 });
 
 //Visualizar registros
-router.get("/verlotes/:id", authenticateToken, async (req, res) => {
+router.get("/verlotes", authenticateToken, async (req, res) => {
   await loteControlador.getLotesByDonante(req, res);
 });
 

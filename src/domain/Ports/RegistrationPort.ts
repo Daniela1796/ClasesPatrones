@@ -3,7 +3,7 @@ import {
   Registration_Empresa,
   Registration_Entidad,
   Registration_Voluntario,
-} from "./Registration";
+} from "../Entities/Registration";
 
 export interface RegistrationPort {
   //Empresas
@@ -49,8 +49,8 @@ export interface RegistrationPort {
   getRegistrationByUser(usuario: string): Promise<MainRegistration | null>;
   getRegistrationByEmail(email: string): Promise<MainRegistration | null>;
   getRegistrationByContacto(contacto: string): Promise<MainRegistration | null>;
+  getRegistrationByLocalidad(localidad: string): Promise<MainRegistration | null>;
   getRegistrationByRol(rol: string): Promise<MainRegistration[]>;
   getAllRegistrations(): Promise<MainRegistration[]>;
-
   deleteMainRegistration(id: number): Promise<boolean>;
 }

@@ -10,14 +10,12 @@ export interface LoteBase {
   idEntrega?: number | null;
 }
 
-// Empresa agrega campos de precio
 export interface LoteEmpresa extends LoteBase {
   cantidadDeCajas: number;
   precioPorCaja: number;
-  costoTotal: number; // calculado: cantidad × precioCaja
+  costoTotal: number; 
 }
 
-// Voluntario solo tiene los campos base
 export interface LoteVoluntario extends LoteBase {
   cantidadPorUnidad: number;
 }

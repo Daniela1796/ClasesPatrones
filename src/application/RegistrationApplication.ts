@@ -5,7 +5,7 @@ import {
   Registration_Voluntario,
   Registration_Entidad,
 } from "../domain/Entities/Registration";
-import { RegistrationPort } from "../domain/RegistrationPort";
+import { RegistrationPort } from "../domain/Ports/RegistrationPort";
 import { AuthApplication } from "./AuthApplication";
 
 type RegistrationData =
@@ -48,6 +48,10 @@ export class UserRegistration {
     const hashedPassword = await bcrypt.hash(data.password, 12);
     data.password = hashedPassword;
 
+    if (!data.rol) {
+      throw new Error("Rol no encontrado");
+    }
+
     if (data.rol.toLowerCase() == "empresa") {
       return await this.port.createRegistrationEmpresa(
         data as Registration_Empresa,
@@ -64,10 +68,6 @@ export class UserRegistration {
       return await this.port.createRegistrationEntidad(
         data as Registration_Entidad,
       );
-    }
-
-    if (!data.rol) {
-      throw new Error("Rol no encontrado");
     }
 
     throw new Error("Rol Invalido");

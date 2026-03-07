@@ -1,8 +1,10 @@
-import { UserRegistration } from "../../application/RegistrationApplication";
-import { RegistroAdapter } from "../adapter/RegistroAdapter";
-import { registroController } from "../controller/RegistrationController";
-import { Request, Response, NextFunction } from "express";
+import { Request, Response} from "express";
 import { Router } from "express";
+
+import { registroController } from "../controller/RegistrationController";
+import { RegistroAdapter } from "../adapter/RegistroAdapter";
+import { UserRegistration } from "../../application/RegistrationApplication";
+
 import { authenticateToken } from "../web/authMiddleware";
 
 const router = Router();

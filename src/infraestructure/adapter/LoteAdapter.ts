@@ -36,9 +36,9 @@ export class LoteAdapter implements LotePort {
     loteEntity.alimento = data.alimento;
     loteEntity.clasificacion = data.clasificacion;
     loteEntity.fechaVencimiento = data.fechaVencimiento;
-    loteEntity.fechaRecibido = data.fechaDeRecibido ?? null; // 👈 maneja undefined
+    loteEntity.fechaRecibido = data.fechaDeRecibido ?? null;
     loteEntity.estado = data.estado;
-    loteEntity.idEntrega = data.idEntrega ?? null; // 👈 maneja undefined
+    loteEntity.idEntrega = data.idEntrega ?? null;
     return loteEntity;
   }
 
@@ -55,11 +55,7 @@ export class LoteAdapter implements LotePort {
     const loteEntity = this.toEntityLote(data);
     loteEntity.cantidadDeCajas = data.cantidadDeCajas;
     loteEntity.precioPorCaja = data.precioPorCaja;
-    loteEntity.costoTotal = data.costoTotal;
-    const costoCalculado =
-      (data as LoteEmpresa).cantidadDeCajas *
-      (data as LoteEmpresa).precioPorCaja;
-    (data as any).costoTotal = costoCalculado;
+    loteEntity.costoTotal = data.cantidadDeCajas * data.precioPorCaja;
     return loteEntity;
   }
 
@@ -183,8 +179,6 @@ export class LoteAdapter implements LotePort {
 
       if (!existingLote) return false;
 
-      Object.assign(existingLote, { estado: false });
-
       await this.loteRepository.update(id, { estado: "Inactivo" });
       return true;
     } catch (error) {
@@ -200,7 +194,11 @@ export class LoteAdapter implements LotePort {
 
     if (!lote) return null;
 
-    return this.toDomainLote(lote);
+    return {
+      ...this.toDomainLote(lote),
+      cantidadDeCajas: lote.cantidadDeCajas,
+      cantidadPorUnidad: lote.cantidadPorUnidad
+    } as any
   }
 
   async getLotesByClasificacion(
@@ -224,6 +222,11 @@ export class LoteAdapter implements LotePort {
         where: { idDonante: id_Donante },
       });
 
+      console.log("buscando por idDonante:", donantes);
+      const lotes = await this.loteRepository.find({
+        where: { idDonante: id_Donante },
+      });
+      console.log("lotes encontrados:", lotes.length);
       return donantes.map(this.toDomainLote);
     } catch (error) {
       console.error("Error al obtener la lista de donantes", Error);
@@ -231,17 +234,30 @@ export class LoteAdapter implements LotePort {
     }
   }
 
-  async getLotesDisponibles(): Promise<LoteBase[]> {
-    try {
-      const disponibles = await this.loteRepository.find({
-        where: { estado: "En proceso" },
-      });
+  async getLotesPriorizados(localidad: string): Promise<LoteBase[]> {
+    const lotesProiorizados = await this.loteRepository
+      .createQueryBuilder("lote")
+      .leftJoin("lote.user", "user")
+      .where("lote.estado = :estado", { estado: "En proceso" })
+      .orderBy(
+        `      CASE lote.clasificacion
+      WHEN 'A' THEN 1
+      WHEN 'B' THEN 2
+      WHEN 'C' THEN 3
+      WHEN 'D' THEN 4
+      ELSE 5
+      END `,
+        "ASC",
+      )
+      .addOrderBy("lote.fechaVencimiento", "ASC")
+      .addOrderBy(
+        `CASE WHEN user.localidad = :localidad THEN 0 ELSE 1 END`,
+        "ASC",
+      )
+      .setParameter("localidad", localidad)
+      .getMany();
 
-      return disponibles.map(this.toDomainLote);
-    } catch (error) {
-      console.error("Error al obtener listado", Error);
-      throw new Error("Error en la lista de lotes disponibles");
-    }
+    return lotesProiorizados.map((lote) => this.toDomainLote(lote));
   }
 
   async updateLoteEstado(
@@ -250,6 +266,12 @@ export class LoteAdapter implements LotePort {
     fechaRecibido?: Date,
   ): Promise<boolean> {
     try {
+      const existingLote = await this.loteRepository.findOne({
+        where: { idLote: id },
+      });
+
+      if (!existingLote) return false;
+
       const loteUpdate: Partial<LoteEntity> = { estado };
 
       if (fechaRecibido) {
