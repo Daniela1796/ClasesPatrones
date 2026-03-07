@@ -1,5 +1,4 @@
 import { Entrega } from "../Entities/Entrega";
-import { LoteBase } from "../Entities/Lote";
 
 export interface EntregaPort {
 

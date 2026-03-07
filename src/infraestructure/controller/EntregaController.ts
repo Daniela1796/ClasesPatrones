@@ -115,7 +115,6 @@ export class EntregaController {
 
   async confirmedEntrega(req: Request, res: Response): Promise<Response> {
     try {
-      console.log("confirmarEntrega en controller, id:", req.params.id);
       const id = Number(req.params.id);
 
       if (Number.isNaN(id)) {

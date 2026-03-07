@@ -4,9 +4,10 @@ import { User } from "../entities/User";
 import { Empresa } from "../entities/Empresa";
 import { Voluntario } from "../entities/Voluntario";
 import { Entidad } from "../entities/Entidad";
-import { EntregaEntity } from "../entities/Entrega";
-import envs from "../config/enviroment-vars";
 import { LoteEntity } from "../entities/Lote";
+import { EntregaEntity } from "../entities/Entrega";
+import { IncentivoEntity } from "../entities/Incentivo";
+import envs from "../config/enviroment-vars";
 
 dotenv.config();
 
@@ -19,7 +20,15 @@ export const AppDataSource = new DataSource({
   database: String(envs.DB_NAME),
   synchronize: true,
   logging: false,
-  entities: [User, Empresa, Voluntario, Entidad, LoteEntity, EntregaEntity],
+  entities: [
+    User,
+    Empresa,
+    Voluntario,
+    Entidad,
+    LoteEntity,
+    EntregaEntity,
+    IncentivoEntity,
+  ],
   ssl: {
     rejectUnauthorized: true,
   },

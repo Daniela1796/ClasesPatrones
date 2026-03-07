@@ -126,16 +126,13 @@ export class EntregaAdapter implements EntregaPort {
       const existingEntrega = await this.entregaRepository.findOne({
         where: { idEntrega: id },
       });
-      console.log("existingEntrega en adapter:", existingEntrega);
 
       if (!existingEntrega) return false;
 
-      console.log("Confirmando entrega id:", id);
       const result = await this.entregaRepository.update(id, {
-        estado: "COnfirmado",
+        estado: "Confirmado",
         fechaConfirmacion: new Date(),
       });
-      console.log("Resultado update:", result);
 
       await this.loteRepository.update(existingEntrega.idLote, {estado: "Activa",
         fechaRecibido: new Date(),

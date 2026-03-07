@@ -1,7 +1,7 @@
 import { Entrega } from "../domain/Entities/Entrega";
 import { EntregaPort } from "../domain/Ports/EntregaPort";
 import { LotePort } from "../domain/Ports/LotePort";
-import { LoteBase, LoteEmpresa, LoteVoluntario } from "../domain/Entities/Lote";
+import { LoteBase } from "../domain/Entities/Lote";
 import { RegistrationPort } from "../domain/Ports/RegistrationPort";
 
 export class userEntrega {
@@ -53,7 +53,9 @@ export class userEntrega {
     }
 
     data.fechaSolicitud = new Date();
-    data.fechaRecogida = new Date(data.fechaSolicitud.getTime() + 24 * 60 * 60 * 1000);
+    data.fechaRecogida = new Date(
+      data.fechaSolicitud.getTime() + 24 * 60 * 60 * 1000,
+    );
     data.estado = "Activa";
 
     const idEntrega = await this.port.createEntrega(data);
@@ -84,7 +86,7 @@ export class userEntrega {
       throw new Error("Solo se pueden cancelar, entregas confirmadas");
     }
 
-    if(existsEntrega.estado === "Cancelada"){
+    if (existsEntrega.estado === "Cancelada") {
       throw new Error("Esta entrega ya ha sido cancelada");
     }
 
@@ -96,9 +98,9 @@ export class userEntrega {
   }
 
   async confirmarEntrega(id: number): Promise<boolean> {
-    console.log("confirmarEntrega en application, id:", id); 
+    //console.log("confirmarEntrega en application, id:", id);
     const entrega = await this.port.getEntregaById(id);
-    console.log("entrega encontrada:", entrega);
+    //console.log("entrega encontrada:", entrega);
     if (!entrega) throw new Error("Entrega no encontrada");
     if (entrega.estado != "Activa")
       throw new Error("Solo se pueden confirmar entregas activas");

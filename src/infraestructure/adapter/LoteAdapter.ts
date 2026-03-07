@@ -197,7 +197,8 @@ export class LoteAdapter implements LotePort {
     return {
       ...this.toDomainLote(lote),
       cantidadDeCajas: lote.cantidadDeCajas,
-      cantidadPorUnidad: lote.cantidadPorUnidad
+      cantidadPorUnidad: lote.cantidadPorUnidad,
+      costoTotal: lote.costoTotal,
     } as any
   }
 

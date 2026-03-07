@@ -3,6 +3,7 @@ import registroRoutes from "../routes/RegistrationRoutes";
 import userRoutes from "../routes/UserRoutes";
 import loteRoutes from "../routes/LoteRoutes";
 import entregaRoutes from "../routes/EntregaRoutes";
+import incentivoRoutes from "../routes/IncentivoRoutes";
 
 class App {
   private app: express.Application;
@@ -21,7 +22,8 @@ class App {
     this.app.use("/api", registroRoutes);
     this.app.use("/api", userRoutes);
     this.app.use("/api", loteRoutes);
-    this.app.use("/api/", entregaRoutes);
+    this.app.use("/api", entregaRoutes);
+    this.app.use("/api", incentivoRoutes);
   }
 
   getApp() {
