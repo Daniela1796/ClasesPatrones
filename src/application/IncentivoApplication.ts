@@ -36,10 +36,10 @@ export class IncentivoApplication {
   }
 
   async getIncentivoById(idIncentivo: number): Promise<Incentivo | null> {
-    const incentivo = await this.getIncentivoById(idIncentivo);
+    const incentivo = await this.port.getIncentivoById(idIncentivo);
 
     if (!incentivo) throw new Error("Incentivo no encontrado");
-    return this.port.getIncentivoById(idIncentivo);
+    return incentivo;
   }
 
   async createIncentivo(data: Omit<Incentivo, "idIncentivo">): Promise<number> {

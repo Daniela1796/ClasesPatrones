@@ -68,13 +68,17 @@ export class IncentivoAdapter implements IncentivoPort {
 
       const incentivoUpdate = this.toEntityPartialIncentivo(incentivo);
 
+      console.log("incentivoUpdate:", incentivoUpdate);
+      console.log("lotesID:", incentivoUpdate.lotesID); 
+
       if (Object.keys(incentivoUpdate).length > 0) {
         await this.incentivoRepository.update(id, incentivoUpdate);
       }
 
       return true;
     } catch (error) {
-      throw new Error("Error al actualizar el incentivo");
+      console.error("Error real:", error);
+      throw error;
     }
   }
 
@@ -123,7 +127,7 @@ export class IncentivoAdapter implements IncentivoPort {
 
       if (!existingIncentivo) return null;
 
-      return this.toDomainIncentivo(existingIncentivo);
+      return existingIncentivo;
     } catch (error) {
       console.error("Error al buscar id de incentivo: ", Error);
       throw new Error("Error al encontrar el id de incentivo");
