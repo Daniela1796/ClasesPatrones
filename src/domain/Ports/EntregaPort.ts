@@ -1,9 +1,7 @@
-import { Entrega } from "../Entities/Entrega";
-import { LoteBase } from "../Entities/Lote";
+import { Entrega } from '../Entities/Entrega';
 
 export interface EntregaPort {
-
-  createEntrega(data: Omit<Entrega, "idEntrega">): Promise<number>;
+  createEntrega(data: Omit<Entrega, 'idEntrega'>): Promise<number>;
   updateEntrega(id: number, entrega: Partial<Entrega>): Promise<boolean>;
   deleteEntrega(id: number): Promise<boolean>;
 

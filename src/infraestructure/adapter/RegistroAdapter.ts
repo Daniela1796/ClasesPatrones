@@ -1,16 +1,16 @@
-import { Repository } from "typeorm";
+import { Repository } from 'typeorm';
 import {
   MainRegistration,
   Registration_Empresa,
   Registration_Voluntario,
   Registration_Entidad,
-} from "../../domain/Entities/Registration";
-import { User } from "../entities/User";
-import { Empresa } from "../entities/Empresa";
-import { Voluntario } from "../entities/Voluntario";
-import { Entidad } from "../entities/Entidad";
-import { RegistrationPort } from "../../domain/Ports/RegistrationPort";
-import { AppDataSource } from "../config/data-base";
+} from '../../domain/Entities/Registration';
+import { User } from '../entities/User';
+import { Empresa } from '../entities/Empresa';
+import { Voluntario } from '../entities/Voluntario';
+import { Entidad } from '../entities/Entidad';
+import { RegistrationPort } from '../../domain/Ports/RegistrationPort';
+import { AppDataSource } from '../config/data-base';
 
 //-------------------------------------------------------------------------
 
@@ -34,7 +34,7 @@ export class RegistroAdapter implements RegistrationPort {
       email: user.email_user,
       password: user.password_user,
       rol: user.rol,
-      usuario: user.name_user,
+      nombreCompleto: user.name_user,
       localidad: user.localidad,
       contacto: user.contacto,
       status: user.status_user,
@@ -42,9 +42,9 @@ export class RegistroAdapter implements RegistrationPort {
   }
 
   //Transformar el modelo de dominio a la entidad de infraestructura
-  private toEntity(user: Omit<MainRegistration, "id">): User {
+  private toEntity(user: Omit<MainRegistration, 'id'>): User {
     const userEntity = new User();
-    userEntity.name_user = user.usuario;
+    userEntity.name_user = user.nombreCompleto;
     userEntity.email_user = user.email;
     userEntity.password_user = user.password;
     userEntity.status_user = user.status;
@@ -60,7 +60,7 @@ export class RegistroAdapter implements RegistrationPort {
     // Solo traduce si el campo existe
     if (user.email) userEntity.email_user = user.email;
     if (user.password) userEntity.password_user = user.password;
-    if (user.usuario) userEntity.name_user = user.usuario;
+    if (user.nombreCompleto) userEntity.name_user = user.nombreCompleto;
     if (user.localidad) userEntity.localidad = user.localidad;
     if (user.contacto) userEntity.contacto = user.contacto;
 
@@ -77,8 +77,8 @@ export class RegistroAdapter implements RegistrationPort {
   }
 
   private toEntityEmpresa(
-    empresa: Omit<Registration_Empresa, "id">,
-    savedUser: User,
+    empresa: Omit<Registration_Empresa, 'id'>,
+    savedUser: User
   ): Empresa {
     const empresaEntity = new Empresa();
     empresaEntity.user = savedUser;
@@ -90,7 +90,7 @@ export class RegistroAdapter implements RegistrationPort {
   }
 
   private toEntityPartialEmpresa(
-    empresa: Partial<Registration_Empresa>,
+    empresa: Partial<Registration_Empresa>
   ): Partial<Empresa> {
     const empresaUpdate: Partial<Empresa> = {};
     if (empresa.razonSocial) empresaUpdate.razonSocial = empresa.razonSocial;
@@ -109,8 +109,8 @@ export class RegistroAdapter implements RegistrationPort {
   }
 
   private toEntityEntidad(
-    entidad: Omit<Registration_Entidad, "id">,
-    savedUser: User,
+    entidad: Omit<Registration_Entidad, 'id'>,
+    savedUser: User
   ): Entidad {
     const entidadEntity = new Entidad();
     entidadEntity.user = savedUser;
@@ -122,7 +122,7 @@ export class RegistroAdapter implements RegistrationPort {
   }
 
   private toEntityPartialEntidad(
-    entidad: Partial<Registration_Entidad>,
+    entidad: Partial<Registration_Entidad>
   ): Partial<Entidad> {
     const entidadUpdate: Partial<Entidad> = {};
     if (entidad.razonSocial) entidadUpdate.razonSocial = entidad.razonSocial;
@@ -140,8 +140,8 @@ export class RegistroAdapter implements RegistrationPort {
   }
 
   private toEntityVoluntario(
-    voluntario: Omit<Registration_Voluntario, "id">,
-    savedUser: User,
+    voluntario: Omit<Registration_Voluntario, 'id'>,
+    savedUser: User
   ): Voluntario {
     const voluntarioEntity = new Voluntario();
     voluntarioEntity.user = savedUser;
@@ -152,7 +152,7 @@ export class RegistroAdapter implements RegistrationPort {
   }
 
   private toEntityPartialVoluntario(
-    voluntario: Partial<Registration_Voluntario>,
+    voluntario: Partial<Registration_Voluntario>
   ): Partial<Voluntario> {
     const voluntarioUpdate: Partial<Voluntario> = {};
     if (voluntario.cedula) voluntarioUpdate.cedula = voluntario.cedula;
@@ -163,7 +163,7 @@ export class RegistroAdapter implements RegistrationPort {
   }
 
   async createRegistrationEmpresa(
-    empresa: Omit<Registration_Empresa, "id">,
+    empresa: Omit<Registration_Empresa, 'id'>
   ): Promise<number> {
     try {
       //Guardar en users
@@ -176,14 +176,14 @@ export class RegistroAdapter implements RegistrationPort {
 
       return savedEmpresa.id_empresa;
     } catch (error) {
-      console.error("Error creando usuario de empresa: ", error);
-      throw new Error("Error al crear el usuario");
+      console.error('Error creando usuario de empresa: ', error);
+      throw new Error('Error al crear el usuario');
     }
   }
 
   async updateRegistrationEmpresa(
     id_empresa: number,
-    empresa: Partial<Registration_Empresa>,
+    empresa: Partial<Registration_Empresa>
   ): Promise<boolean> {
     try {
       const existingEmpresa = await this.registroRepoEmpresa.findOne({
@@ -198,7 +198,7 @@ export class RegistroAdapter implements RegistrationPort {
       if (Object.keys(userUpdate).length > 0) {
         await this.registroRepository.update(
           existingEmpresa.user_id,
-          userUpdate,
+          userUpdate
         );
       }
 
@@ -211,13 +211,13 @@ export class RegistroAdapter implements RegistrationPort {
 
       return true;
     } catch (error) {
-      console.error("Error actualizando usuario: ", error);
-      throw new Error("Error actualizando usuario");
+      console.error('Error actualizando usuario: ', error);
+      throw new Error('Error actualizando usuario');
     }
   }
 
   async createRegistrationEntidad(
-    entidad: Omit<Registration_Entidad, "id">,
+    entidad: Omit<Registration_Entidad, 'id'>
   ): Promise<number> {
     try {
       //Guardar en tabla users
@@ -229,14 +229,14 @@ export class RegistroAdapter implements RegistrationPort {
       const savedEntidad = await this.registroRepoEntidad.save(entidadEntity);
       return savedEntidad.id_entidad;
     } catch (error) {
-      console.error("Error creando usuario de empresa: ", error);
-      throw new Error("Error al crear el usuario");
+      console.error('Error creando usuario de empresa: ', error);
+      throw new Error('Error al crear el usuario');
     }
   }
 
   async updateRegistrationEntidad(
     id_entidad: number,
-    entidad: Partial<Registration_Entidad>,
+    entidad: Partial<Registration_Entidad>
   ): Promise<boolean> {
     try {
       const existingEntidad = await this.registroRepoEntidad.findOne({
@@ -251,7 +251,7 @@ export class RegistroAdapter implements RegistrationPort {
       if (Object.keys(userUpdate).length > 0) {
         await this.registroRepository.update(
           existingEntidad.user_id,
-          userUpdate,
+          userUpdate
         );
       }
 
@@ -264,13 +264,13 @@ export class RegistroAdapter implements RegistrationPort {
 
       return true;
     } catch (error) {
-      console.error("Error actualizando usarios: ", error);
-      throw new Error("Error actualizando usuario");
+      console.error('Error actualizando usarios: ', error);
+      throw new Error('Error actualizando usuario');
     }
   }
 
   async createRegistrationVoluntario(
-    voluntario: Omit<Registration_Voluntario, "id">,
+    voluntario: Omit<Registration_Voluntario, 'id'>
   ): Promise<number> {
     try {
       //Guardar en users
@@ -283,14 +283,14 @@ export class RegistroAdapter implements RegistrationPort {
         await this.registroRepoVoluntario.save(voluntarioEntity);
       return savedVoluntario.id_voluntario;
     } catch (error) {
-      console.error("Error creando usuario voluntario: ", error);
-      throw new Error("Error al crear el usuario");
+      console.error('Error creando usuario voluntario: ', error);
+      throw new Error('Error al crear el usuario');
     }
   }
 
   async updateRegistrationVoluntario(
     id_voluntario: number,
-    voluntario: Partial<Registration_Voluntario>,
+    voluntario: Partial<Registration_Voluntario>
   ): Promise<boolean> {
     try {
       const existingVoluntario = await this.registroRepoVoluntario.findOne({
@@ -304,7 +304,7 @@ export class RegistroAdapter implements RegistrationPort {
       if (Object.keys(userUpdate).length > 0) {
         await this.registroRepository.update(
           existingVoluntario.user_id,
-          userUpdate,
+          userUpdate
         );
       }
 
@@ -313,14 +313,14 @@ export class RegistroAdapter implements RegistrationPort {
       if (Object.keys(voluntarioUpdate).length > 0) {
         await this.registroRepoVoluntario.update(
           id_voluntario,
-          voluntarioUpdate,
+          voluntarioUpdate
         );
       }
 
       return true;
     } catch (error) {
-      console.error("Error actualizando voluntario: ", error);
-      throw new Error("Error actualizando voluntario");
+      console.error('Error actualizando voluntario: ', error);
+      throw new Error('Error actualizando voluntario');
     }
   }
 
@@ -339,13 +339,13 @@ export class RegistroAdapter implements RegistrationPort {
       await this.registroRepository.save(existingUser);
       return true;
     } catch (error) {
-      console.error("Error al actualizar estado de usuario: ", Error);
-      throw new Error("Error al dar baja a usuario");
+      console.error('Error al actualizar estado de usuario: ', Error);
+      throw new Error('Error al dar baja a usuario');
     }
   }
 
   async getEmpresaByNIT(
-    nit_empresa: string,
+    nit_empresa: string
   ): Promise<Registration_Empresa | null> {
     const empresaNit = await this.registroRepoEmpresa.findOne({
       where: { nit: nit_empresa },
@@ -358,7 +358,7 @@ export class RegistroAdapter implements RegistrationPort {
   }
 
   async getRegistrationByRazonSocialEmpresa(
-    razon_social: string,
+    razon_social: string
   ): Promise<Registration_Empresa | null> {
     const razonSocial_empresa = await this.registroRepoEmpresa.findOne({
       where: { razonSocial: razon_social },
@@ -371,7 +371,7 @@ export class RegistroAdapter implements RegistrationPort {
   }
 
   async getEntidadByNIT(
-    nit_entidad: string,
+    nit_entidad: string
   ): Promise<Registration_Entidad | null> {
     const entidadNit = await this.registroRepoEntidad.findOne({
       where: { nit: nit_entidad },
@@ -384,7 +384,7 @@ export class RegistroAdapter implements RegistrationPort {
   }
 
   async getRegistrationByRazonSocialEntidad(
-    razon_social: string,
+    razon_social: string
   ): Promise<Registration_Entidad | null> {
     const razonSocial_entidad = await this.registroRepoEntidad.findOne({
       where: { razonSocial: razon_social },
@@ -397,7 +397,7 @@ export class RegistroAdapter implements RegistrationPort {
   }
 
   async getVoluntarioByCedula(
-    cedulaVol: string,
+    cedulaVol: string
   ): Promise<Registration_Voluntario | null> {
     const cedulaVoluntario = await this.registroRepoVoluntario.findOne({
       where: { cedula: cedulaVol },
@@ -421,7 +421,7 @@ export class RegistroAdapter implements RegistrationPort {
   }
 
   async getRegistrationByUser(
-    usuario: string,
+    usuario: string
   ): Promise<MainRegistration | null> {
     const user = await this.registroRepository.findOne({
       where: { name_user: usuario },
@@ -434,7 +434,7 @@ export class RegistroAdapter implements RegistrationPort {
   }
 
   async getRegistrationByEmail(
-    email: string,
+    email: string
   ): Promise<MainRegistration | null> {
     const user = await this.registroRepository.findOne({
       where: { email_user: email },
@@ -447,7 +447,7 @@ export class RegistroAdapter implements RegistrationPort {
   }
 
   async getRegistrationByContacto(
-    contacto_user: string,
+    contacto_user: string
   ): Promise<MainRegistration | null> {
     const user = await this.registroRepository.findOne({
       where: { contacto: contacto_user },
@@ -459,7 +459,7 @@ export class RegistroAdapter implements RegistrationPort {
   }
 
   async getRegistrationByLocalidad(
-    localidad_user: string,
+    localidad_user: string
   ): Promise<MainRegistration | null> {
     const user = await this.registroRepository.findOne({
       where: { localidad: localidad_user },
@@ -476,8 +476,8 @@ export class RegistroAdapter implements RegistrationPort {
       });
       return users.map(this.toDomain);
     } catch (error) {
-      console.error("Error obteniendo usuario: ", Error);
-      throw new Error("Error en la lista de usuarios");
+      console.error('Error obteniendo usuario: ', Error);
+      throw new Error('Error en la lista de usuarios');
     }
   }
 
@@ -488,8 +488,8 @@ export class RegistroAdapter implements RegistrationPort {
       });
       return users.map(this.toDomain);
     } catch (error) {
-      console.error("Error obteniendo usuarioa: ", Error);
-      throw new Error("Error en la lista de usuarios");
+      console.error('Error obteniendo usuarioa: ', Error);
+      throw new Error('Error en la lista de usuarios');
     }
   }
 }

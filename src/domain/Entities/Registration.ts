@@ -3,7 +3,7 @@ export interface MainRegistration {
   email: string;
   password: string;
   rol: string;
-  usuario: string;
+  nombreCompleto: string;
   localidad: string;
   contacto: string;
   status: boolean;
